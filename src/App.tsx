@@ -130,16 +130,13 @@ function App() {
   return (
     <main>
       <section id="players">
-        <Player
-          name={players[0].name}
-          score={deriveScore(gameHistory, players[0].name)}
-          active={players[0].name === currentPlayer}
-        />
-        <Player
-          name={players[1].name}
-          score={deriveScore(gameHistory, players[1].name)}
-          active={players[1].name === currentPlayer}
-        />
+        {players.map(({ name }) => (
+          <Player
+            name={name}
+            score={deriveScore(gameHistory, name)}
+            active={name === currentPlayer}
+          />
+        ))}
       </section>
       <GameActions
         onBallClick={handleBallClick}
