@@ -104,6 +104,7 @@ function App() {
     });
   };
 
+  //Bug around here. When player pots last black isn't added to the score total
   const endGameHandler = () => {
     setIsGameInProgress(false);
   };
