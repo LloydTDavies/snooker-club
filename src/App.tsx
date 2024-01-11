@@ -11,6 +11,7 @@ import {
   isPot,
 } from "./types";
 import Player from "./components/Player";
+import UndoConfirmation from "./components/UndoConfirmation";
 
 const PLAYERS: GamePlayer[] = [{ name: "Player 1" }, { name: "Player 2" }];
 
@@ -65,6 +66,7 @@ function App() {
   const [players, setPlayers] = useState([...PLAYERS]);
   const [gameHistory, setGameHistory] = useState<GameHistory[]>([]);
   const [isGameInProgress, setIsGameInProgress] = useState(true);
+  const [isUndoEnabled, setIsUndoEnabled] = useState(false);
 
   void [setPlayers];
 
@@ -114,6 +116,15 @@ function App() {
     setGameHistory([]);
   };
 
+  const handleUndoClick = () => {
+    setIsUndoEnabled(false);
+    setGameHistory((previousGameHistory) => {
+      const newHistory = [...previousGameHistory];
+      newHistory.splice(0, 1);
+      return newHistory;
+    });
+  };
+
   const currentPlayer = deriveCurrentPlayer(gameHistory, players);
 
   if (!isGameInProgress) {
@@ -128,11 +139,22 @@ function App() {
     );
   }
 
+  if (isUndoEnabled) {
+    return (
+      <UndoConfirmation
+        gameHistory={gameHistory}
+        onConfirmUndo={() => handleUndoClick()}
+        onDismiss={() => setIsUndoEnabled(false)}
+      />
+    );
+  }
+
   return (
     <main>
       <section id="players">
         {players.map(({ name }) => (
           <Player
+            key={name}
             name={name}
             score={deriveScore(gameHistory, name)}
             active={name === currentPlayer}
@@ -144,6 +166,8 @@ function App() {
         onMissClick={handleMissClick}
         onFoulClick={handleFoulClick}
         onEndGameClick={endGameHandler}
+        showUndo={gameHistory.length > 0}
+        onUndoClick={() => setIsUndoEnabled(true)}
       />
     </main>
   );

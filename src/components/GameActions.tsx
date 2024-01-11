@@ -8,6 +8,8 @@ type GameActionsProps = {
   onMissClick: () => void;
   onFoulClick: () => void;
   onEndGameClick: () => void;
+  onUndoClick: () => void;
+  showUndo: boolean;
 };
 
 export default function GameActions({
@@ -15,6 +17,8 @@ export default function GameActions({
   onMissClick,
   onFoulClick,
   onEndGameClick,
+  onUndoClick,
+  showUndo,
 }: GameActionsProps) {
   const [ballsRemaining, setBallsRemaining] = useState({ ...ALL_BALLS });
 
@@ -53,9 +57,9 @@ export default function GameActions({
   }
 
   return (
-    <section>
+    <section id="game-actions">
       <div>{ballButtons}</div>
-      <div>
+      <div className="non-pot-actions">
         <button onClick={onFoulClick} disabled={!hasRemaining}>
           Foul
         </button>
@@ -63,6 +67,8 @@ export default function GameActions({
           Miss
         </button>
         <button onClick={onEndGameClick}>End Game</button>
+
+        {showUndo && <button onClick={onUndoClick}>Undo</button>}
       </div>
     </section>
   );
