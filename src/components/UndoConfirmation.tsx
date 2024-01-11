@@ -1,4 +1,3 @@
-import React from "react";
 import { GameHistory, isFoul, isPot } from "../types";
 
 type UndoConfirmationProps = {

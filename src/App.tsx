@@ -7,11 +7,12 @@ import {
   GameHistory,
   Miss,
   Player as GamePlayer,
-  isFoul,
   isPot,
 } from "./types";
 import Player from "./components/Player";
 import UndoConfirmation from "./components/UndoConfirmation";
+import GameOver from "./components/GameOver";
+import { deriveScore } from "./utils/scoring";
 
 const PLAYERS: GamePlayer[] = [{ name: "Player 1" }, { name: "Player 2" }];
 
@@ -32,35 +33,6 @@ function deriveCurrentPlayer(
   return players.filter((player) => player.name !== lastTurn.player)[0].name;
 }
 
-function deriveScoreFromFouls(
-  gameHistory: GameHistory[],
-  playerName: string
-): number {
-  return gameHistory
-    .filter((turn) => isFoul(turn.pot) && turn.player !== playerName)
-    .reduce((score, turn) => {
-      if (isFoul(turn.pot)) {
-        return score + turn.pot.value;
-      }
-
-      return score;
-    }, 0);
-}
-
-function deriveScore(gameHistory: GameHistory[], playerName: string): number {
-  const playerHistory = gameHistory.filter(
-    (turn) => turn.player === playerName
-  );
-
-  const pottedScore = playerHistory.reduce((score, turn) => {
-    if (isPot(turn.pot)) {
-      return score + turn.pot.value;
-    }
-    return score;
-  }, 0);
-
-  return pottedScore + deriveScoreFromFouls(gameHistory, playerName);
-}
 
 function App() {
   const [players, setPlayers] = useState([...PLAYERS]);
@@ -129,13 +101,7 @@ function App() {
 
   if (!isGameInProgress) {
     return (
-      <div>
-        <h1>Game Over</h1>
-        <h2>Final Scores</h2>
-        <div>Player 1: {deriveScore(gameHistory, players[0].name)}</div>
-        <div>Player 2: {deriveScore(gameHistory, players[1].name)}</div>
-        <button onClick={newGameHandler}>New Game</button>
-      </div>
+     <GameOver gameHistory={gameHistory} players={players} onNewGame={newGameHandler} />
     );
   }
 
