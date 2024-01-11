@@ -1,3 +1,15 @@
+#game-actions {
+  margin-block-start: 60px;
+}
+
+.non-pot-actions {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  justify-content: space-evenly;
+  margin-block-start: 25px;
+}
+
 .ball {
   width: 100px;
   height: 100px;
