@@ -33,18 +33,22 @@ function deriveCurrentPlayer(
   return players.filter((player) => player.name !== lastTurn.player)[0].name;
 }
 
-
 function App() {
   const [players, setPlayers] = useState([...PLAYERS]);
   const [gameHistory, setGameHistory] = useState<GameHistory[]>([]);
   const [isGameInProgress, setIsGameInProgress] = useState(true);
   const [isUndoEnabled, setIsUndoEnabled] = useState(false);
+  const [gameTime, setGameTime] = useState({ startTime: 0, endTime: 0 });
 
   void [setPlayers];
 
   const handleBallClick = (ball: Ball) => {
     const currentPlayer = deriveCurrentPlayer(gameHistory, players);
-    console.log(`Player ${currentPlayer} potted ${ball.color}`);
+
+    if (gameHistory.length === 0) {
+      setGameTime({ startTime: Date.now(), endTime: 0 });
+    }
+
     setGameHistory((previousGameHistory) => {
       const newHistory = [...previousGameHistory];
       newHistory.splice(0, 0, { player: currentPlayer, pot: ball });
@@ -81,6 +85,7 @@ function App() {
   //Bug around here. When player pots last black isn't added to the score total
   const endGameHandler = () => {
     setIsGameInProgress(false);
+    setGameTime((timer) => ({ ...timer, endTime: Date.now() }));
   };
 
   const newGameHandler = () => {
@@ -101,7 +106,12 @@ function App() {
 
   if (!isGameInProgress) {
     return (
-     <GameOver gameHistory={gameHistory} players={players} onNewGame={newGameHandler} />
+      <GameOver
+        gameHistory={gameHistory}
+        players={players}
+        onNewGame={newGameHandler}
+        gameTime={gameTime}
+      />
     );
   }
 
