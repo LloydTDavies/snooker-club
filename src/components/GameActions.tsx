@@ -39,14 +39,17 @@ export default function GameActions({
     const isDisabled = ballsRemaining[ball.color] === 0;
     const classes = ["ball", ball.color, isDisabled ? "disabled" : ""];
     return (
-      <button
-        className={classes.join(" ")}
-        key={ball.color}
-        onClick={() => handleBallClick(ball)}
-        disabled={isDisabled}
-      >
-        {ball.color}
-      </button>
+      <div>
+        <button
+          className={classes.join(" ")}
+          key={ball.color}
+          onClick={() => handleBallClick(ball)}
+          disabled={isDisabled}
+        >
+          {ball.color}
+        </button>
+        <p>Remaining : {ballsRemaining[ball.color]}</p>
+      </div>
     );
   });
 
@@ -58,14 +61,14 @@ export default function GameActions({
 
   return (
     <section id="game-actions">
-      <div>{ballButtons}</div>
+      <div className="ball-container">{ballButtons} <button className="ball white" onClick={onMissClick} disabled={!hasRemaining}>
+          Miss
+        </button></div>
       <div className="non-pot-actions">
         <button onClick={onFoulClick} disabled={!hasRemaining}>
           Foul
         </button>
-        <button onClick={onMissClick} disabled={!hasRemaining}>
-          Miss
-        </button>
+       
         <button onClick={onEndGameClick}>End Game</button>
 
         {showUndo && <button onClick={onUndoClick}>Undo</button>}
