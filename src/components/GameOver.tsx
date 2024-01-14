@@ -4,7 +4,8 @@ import { deriveScore } from "../utils/scoring";
 type GameOverProps = {
     gameHistory: GameHistory[],
     players: Player[],
-    onNewGame: () => void
+    onNewGame: () => void,
+    gameTime: {startTime: number, endTime: number},
 };
 
 function deriveTurnText(turn: GameHistory): string {
@@ -16,7 +17,7 @@ function deriveTurnText(turn: GameHistory): string {
     return `${turn.player} missed`;
   }
 
-export default function GameOver({ gameHistory, players, onNewGame }: GameOverProps) {
+export default function GameOver({ gameHistory, players, onNewGame, gameTime }: GameOverProps) {
   return (
     <div>
       <h1>Game Over</h1>
@@ -26,6 +27,7 @@ export default function GameOver({ gameHistory, players, onNewGame }: GameOverPr
       <button onClick={onNewGame}>New Game</button>
 
       <h2>Game History</h2>
+      <p>Time: {Math.round((((gameTime.endTime - gameTime.startTime) % 86400000) % 3600000) / 60000) } minutes</p>
       <ul>
         {gameHistory.map((turn, index) => (
           <li key={index}>
